@@ -12,7 +12,8 @@ if (!prod) require('dotenv').config();
 
 app.set('port', prod ? process.env.PORT : 5050);
 
-sequelize.sync({ force: false })
+sequelize
+  .sync({ force: false })
   .then(() => console.log('DB connected!'))
   .catch(err => console.error(err));
 
@@ -42,4 +43,3 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
   console.log(`Server is listening on port is ${app.get('port')}!`);
 });
-
