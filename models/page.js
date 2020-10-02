@@ -1,5 +1,5 @@
-const Page = (sequelize, DataTypes) => {
-  return sequelize.define('page', {
+module.exports = (sequelize, DataTypes) => {
+  const Page = sequelize.define('page', {
     url: {
       type: DataTypes.STRING(500),
       allowNull: false,
@@ -18,7 +18,14 @@ const Page = (sequelize, DataTypes) => {
       type: DataTypes.JSON,
       defaultValue: {},
     },
+  }, {
+    timestamps: false,
+    underscored: true,
   });
-};
 
-module.exports = { Page };
+  Page.associate = (db) => {
+    
+  };
+
+  return Page;
+};
