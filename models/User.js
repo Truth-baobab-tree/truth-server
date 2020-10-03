@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('user', {
     key: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING(50),
       allowNull: false,
       unique: true,
     },
@@ -10,18 +10,18 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 'bronze',
     },
-    count: {
+    eval_count: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
-    }
+    },
   }, {
     timestamps: false,
     underscored: true,
   });
 
   User.associate = function(db) {
-    db.User.hasMany(db.Report, { foreignKey: 'reporter', sourceKey: 'id' });
+    db.User.hasMany(db.Page, { foreignKey: 'person', sourceKey: 'id' });
   };
 
   return User;

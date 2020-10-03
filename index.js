@@ -3,6 +3,9 @@ const helmet = require('helmet');
 const hpp = require('hpp');
 const cors = require('cors');
 
+const pageRouter = require('./routes/page');
+const userRouter = require('./routes/user');
+
 const { sequelize } = require('./models');
 
 const app = express();
@@ -29,9 +32,10 @@ if (prod) {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-  res.status(200).json("This is truth server.");
-});
+app.use('/page', pageRouter);
+app.use('/user', userRouter);
+
+app.get('/', (req, res) => res.status(200).json("Hello, this is truth server."));
 
 app.use((err, req, res, next) => {
   res.locals.message = err.message;

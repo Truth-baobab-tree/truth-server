@@ -9,7 +9,7 @@ const db = {};
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-const models = ['User', 'Page', 'Report'];
+const models = ['User', 'Page'];
 
 models.forEach(model => db[model] = require(`./${model}`)(sequelize, Sequelize));
 models.forEach(model => {
