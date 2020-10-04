@@ -2,6 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const hpp = require('hpp');
 const cors = require('cors');
+const morgan = require('morgan');
 
 const pageRouter = require('./routes/page');
 const userRouter = require('./routes/user');
@@ -29,8 +30,9 @@ if (prod) {
   }));
 }
 
+app.use(morgan(prod ? 'combined' : 'dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
 app.use('/page', pageRouter);
 app.use('/user', userRouter);

@@ -3,10 +3,13 @@ module.exports = (sequelize, DataTypes) => {
     url: {
       type: DataTypes.STRING(500),
       allowNull: false,
-      unique: true,
     },
     status: {
       type: DataTypes.STRING(10),
+      allowNull: false,
+    },
+    reason: {
+      type: DataTypes.STRING(500),
       allowNull: false,
     },
     person: {

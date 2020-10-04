@@ -6,18 +6,15 @@ const userKeyToIdConv = async (key) => {
 }
 
 const userCheck = async (key, type) => {
-  key = key.trim();
-  
   if (key && key !== '') {
     const user = await User.findOne({ where: { key }});
-
-    if (user[0]) {
+    if (user) {
       if (type === 'data') return user;
       return true;
     }
   }
 
-  return undefined;
+  return false;
 };
 
 
