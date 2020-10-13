@@ -6,6 +6,7 @@ const morgan = require('morgan');
 
 const pageRouter = require('./routes/page');
 const userRouter = require('./routes/user');
+const infoRouter = require('./routes/info');
 
 const { sequelize } = require('./models');
 
@@ -36,14 +37,17 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/page', pageRouter);
 app.use('/user', userRouter);
+app.use('/info', infoRouter);
 
-app.get('/', (req, res) => res.status(200).json("Hello, this is truth server."));
+app.get('/', (req, res) => {
+  res.status(200).json('Hello, Truth Server.');
+});
 
 app.use((err, req, res, next) => {
+  console.log('error:');
   res.locals.message = err.message;
   res.locals.error = prod ? err : {};
-  res.status(err.status || 500);
-  res.render('error');
+  res.status(err.status || 500).json('error');
 });
 
 app.listen(app.get('port'), () => {
