@@ -3,22 +3,9 @@ const router = express.Router();
 
 const { User, Page } = require('../models');
 
-const { userCheck, userKeyToIdConv } = require('../script/user');
-const pageCheck = require('../script/pageCheck');
+const { getPageCheck } = require('../script/page');
 
-const { getAdminCheck, postAdminCheck } = require('../middleware/adminCheck');
-
-router.get('/get/all/:admin', getAdminCheck, async (req, res, next) => {
-  try {
-    const pages = await Page.findAll();
-    res.status(200).json(pages);
-  } catch (err) {
-    console.log(err);
-    next(err);
-  }
-});
-
-router.post('/get/find', postAdminCheck, async (req, res, next) => {
+router.post('/get/find',  async (req, res, next) => {
   try {
     const { url } = req.body;
     const data = await Page.findAll({ where: { url }});
@@ -30,8 +17,8 @@ router.post('/get/find', postAdminCheck, async (req, res, next) => {
   }
 });
 
-
-router.post('/get/find-set', postAdminCheck, async (req, res, next) => {
+/*
+router.post('/get/find-set', async (req, res, next) => {
   try {
     const { url, key } = req.body;
 
@@ -58,42 +45,38 @@ router.post('/get/find-set', postAdminCheck, async (req, res, next) => {
     next(err);
   }
 });
-
-router.post('/new/eval', postAdminCheck, async (req, res, next) => {
+*/
+router.post('/new/eval',  async (req, res, next) => {
   try {
     const { url, status, reason, key } = req.body;
+    if (!key) return res.redirect('/error/server/request-error');
+    
+    const user = await User.findOne({ attributes: ["id", "eval_count"], where: { key }});
 
-    let user = await userCheck(key, 'data');
-    console.log(user);
-    if (!user) {
-      await User
-        .create({ key })
-        .then(result => {
-          console.log(result);
-          user = {};
-          console.log(result.id);
-          user.id = result.id;
-        });
+    const id = user.id;
+
+    if (!id || !url || !status || !reason) {
+      return res.redirect('/error/server/request-error');
     }
 
-    const person = user.id;
+    const page = await getPageCheck(url, id);
 
-    const page = await pageCheck(url, person);
+    console.log(page);
 
     if (page) {
-      Page
-        .update({ url, status, person, reason, }, { where: { url }})
-          .then(result => {
-            res.status(201).json(result);
-          });
+      await Page
+        .update({ url, status, person: id, reason, }, { where: { url }})
+        .then(result => {
+          res.status(201).json(result ? 'success' : 'fail');
+        });
       } else {
-        Page
-          .create({ url, status, person, reason })
+        await User.update({ eval_count: user.eval_count + 1 }, { where: { id }});
+        await Page
+          .create({ status, person: id, reason })
           .then(result => {
-            res.status(201).json(result);
+            res.status(201).json(result ? 'success' : 'fail');
           });
       }
-
   } catch (err) {
     console.log(err);
     next(err);
