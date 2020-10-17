@@ -5,11 +5,11 @@ const userKeyToIdConv = async (key) => {
   return id;
 }
 
-const userCheck = async (key, type) => {
+const getUserCheck = async (key) => {
   if (key && key !== '') {
     const user = await User.findOne({ where: { key }});
+    
     if (user) {
-      if (type === 'data') return user;
       return true;
     }
   }
@@ -17,5 +17,17 @@ const userCheck = async (key, type) => {
   return false;
 };
 
+const getUserData = async (key) => {
+  if (key && key !== '') {
+    const user = await User.findOne({ where: { key }});
+    
+    if (user) {
+      return true;
+    }
+  }
 
-module.exports = { userKeyToIdConv, userCheck };
+  return false;
+}
+
+
+module.exports = { userKeyToIdConv, getUserCheck, getUserData, };

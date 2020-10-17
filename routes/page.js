@@ -2,30 +2,15 @@ const express = require('express');
 const router = express.Router();
 
 const { User, Page } = require('../models');
-
+const { getUserCheck } = require('../script/user');
 const { getPageCheck } = require('../script/page');
 
-router.post('/get/find',  async (req, res, next) => {
-  try {
-    const { url } = req.body;
-    const data = await Page.findAll({ where: { url }});
-
-    res.status(200).json(data);
-  } catch (err) {
-    console.log(err);
-    next(err);
-  }
-});
-
 /*
-router.post('/get/find-set', async (req, res, next) => {
+router.post('/get/page', async (req, res, next) => {
   try {
     const { url, key } = req.body;
 
     const user = await userCheck(key, 'data');
-    if (!user) {
-      await User.create({ key });
-    }
 
     const pages = await Page.findAll({ where: { url }, include: { model: User }});
 
@@ -46,7 +31,38 @@ router.post('/get/find-set', async (req, res, next) => {
   }
 });
 */
-router.post('/new/eval',  async (req, res, next) => {
+
+router.post('/get/eval', async (req, res) => {
+  try {
+    const { url, key } = req.body;
+
+    const user = await getUserCheck(key);
+    if (!user) return res.redirect('/error/server/request-error');
+
+    const pages = await Page.findAll({ where: { url }, include: { model: User }});
+    if (!pages) return res.status(200).json({});
+
+    const data = [];
+
+    pages.forEach(item => {
+      let { status, reason, user } = item;
+      let { name } = user;
+
+      if (item.user.key === key) {
+        data.unshift({ status, reason, name });
+      } else {
+        data.push({ status, reason, name });
+      }
+    });
+
+    res.status(200).json(data);
+  } catch (err) {
+    console.log(err);
+    res.redirect('/error/server/server-error');
+  }
+});
+
+router.post('/new/eval',  async (req, res) => {
   try {
     const { url, status, reason, key } = req.body;
     if (!key) return res.redirect('/error/server/request-error');
@@ -60,8 +76,6 @@ router.post('/new/eval',  async (req, res, next) => {
     }
 
     const page = await getPageCheck(url, id);
-
-    console.log(page);
 
     if (page) {
       await Page
@@ -79,7 +93,7 @@ router.post('/new/eval',  async (req, res, next) => {
       }
   } catch (err) {
     console.log(err);
-    next(err);
+    res.redirect('/error/server/server-error');
   }
 });
 

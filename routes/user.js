@@ -29,7 +29,6 @@ router.post('/api/signup', async (req, res) => {
       const data = await User.create({ key, sign, name, password });
       return res.status(200).json(data.key);
     }
-
     res.redirect('/error/server/server-error');
   } catch (err) {
     res.redirect(`/error/server/${err}`);
