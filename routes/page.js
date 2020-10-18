@@ -5,32 +5,29 @@ const { User, Page } = require('../models');
 const { getUserCheck } = require('../script/user');
 const { getPageCheck } = require('../script/page');
 
-/*
-router.post('/get/page', async (req, res, next) => {
+
+router.post('/get/score', async (req, res) => {
   try {
-    const { url, key } = req.body;
+    const { url } = req.body;
+    if (!url) return res.redirect('/error/server/request-error');
 
-    const user = await userCheck(key, 'data');
-
-    const pages = await Page.findAll({ where: { url }, include: { model: User }});
-
-    if (!pages) res.status(200).json({});
+    const pages = await Page.findAll({ attributes: ['status'], where: { url }});
+    if (!pages) return res.status(200).json({});
 
     const data = {};
+    data['truth'] = 0;
+    data['lie'] = 0;
     pages.forEach(page => {
-      data[page.status] = data[page.status] ? data[page.status] + 1 : 1;
-      if (user.key === key) data['state'] = page.status;
+      data[page.status] = data[page.status] + 1;
     });
-    data['notice'] = data['false'] > 100;
+    data['notice'] = data['lie'] > 100;
     console.log(data);
-
     res.status(200).json(data);
   } catch (err) {
     console.log(err);
-    next(err);
+    res.redirect('/error/server/server-error');
   }
 });
-*/
 
 router.post('/get/eval', async (req, res) => {
   try {
