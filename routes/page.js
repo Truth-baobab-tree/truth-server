@@ -62,9 +62,11 @@ router.post('/get/eval', async (req, res) => {
 router.post('/new/eval',  async (req, res) => {
   try {
     const { url, status, reason, key } = req.body;
+    console.log(url, status, reason, key);
     if (!key) return res.redirect('/error/server/request-error');
     
     const user = await User.findOne({ attributes: ["id", "eval_count"], where: { key }});
+    if (!user) return res.redirect('/error/server/request-error');
 
     const id = user.id;
 
@@ -83,7 +85,7 @@ router.post('/new/eval',  async (req, res) => {
       } else {
         await User.update({ eval_count: user.eval_count + 1 }, { where: { id }});
         await Page
-          .create({ status, person: id, reason })
+          .create({ url, status, person: id, reason })
           .then(result => {
             res.status(201).json(result ? 'success' : 'fail');
           });
