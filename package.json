@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm i && npm run db:set && node index",
+    "start": "npm i && node index",
     "dev": "nodemon index",
     "db:set": "sequelize db:create"
   },
