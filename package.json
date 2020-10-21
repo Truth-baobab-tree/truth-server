@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run db:set && nonde index",
+    "start": "npm run db:set && node index",
     "dev": "nodemon index",
     "db:set": "sequelize db:create"
   },
