@@ -62,7 +62,6 @@ router.post('/get/eval', async (req, res) => {
 router.post('/new/eval',  async (req, res) => {
   try {
     const { url, status, reason, key } = req.body;
-    console.log(url, status, reason, key);
     if (!key) return res.redirect('/error/server/request-error');
     
     const user = await User.findOne({ attributes: ["id", "eval_count"], where: { key }});
@@ -78,7 +77,7 @@ router.post('/new/eval',  async (req, res) => {
 
     if (page) {
       await Page
-        .update({ url, status, person: id, reason, }, { where: { url }})
+        .update({ url, status, reason, }, { where: { url, person: id }})
         .then(result => {
           res.status(201).json(result ? 'success' : 'fail');
         });
