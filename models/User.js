@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     key: {
       type: DataTypes.STRING(500),
       allowNull: false,
+      unique: true,
     },
     sign: {
       type: DataTypes.INTEGER,
@@ -22,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 'bronze',
     },
-    eval_count: {
+    count: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
@@ -34,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function(db) {
     db.User.hasMany(db.Page, { foreignKey: 'person', sourceKey: 'id' });
+    db.User.hasMany(db.Dict, { foreignKey: 'person', sourceKey: 'id' });
   };
 
   return User;

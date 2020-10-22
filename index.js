@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const pageRouter = require('./routes/page');
 const userRouter = require('./routes/user');
 const infoRouter = require('./routes/info');
+const dictRouter = require('./routes/dict');
 const errorRouter = require('./routes/error');
 
 const { sequelize } = require('./models');
@@ -30,9 +31,10 @@ if (prod) {
     origin: true,
     credentials: true,
   }));
+} else {
+  app.use(cors());
 }
 
-app.use(cors());
 app.use(morgan(prod ? 'combined' : 'dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -40,6 +42,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/page', pageRouter);
 app.use('/user', userRouter);
 app.use('/info', infoRouter);
+app.use('/dict', dictRouter);
 app.use('/error', errorRouter);
 
 app.get('/', (req, res) => {

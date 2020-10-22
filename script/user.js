@@ -1,33 +1,48 @@
 const { User } = require('../models');
 
-const userKeyToIdConv = async (key) => {
-  const id = await User.findOne({ attributes: ['id'], where: { key }});
-  return id;
+const getUserCheck = async (key) => {
+  try {
+    if (key && key !== '') {
+      const user = await User.findOne({ attributes: ['id'], where: { key }});
+      
+      if (user) {
+        return true;
+      }
+    }
+  
+    return false;
+  } catch (err) {
+    return false;
+  }
+};
+
+const getUserData = async (key) => {
+  try {
+    if (key && key !== '') {
+      const user = await User.findOne({ attributes: ['id', 'name', 'rank', 'count'], where: { key }});
+      
+      if (user) {
+        return user;
+      }
+    }
+  
+    return false;
+  } catch (err) {
+    return false;
+  }
 }
 
-const getUserCheck = async (key) => {
-  if (key && key !== '') {
-    const user = await User.findOne({ where: { key }});
-    
+const getUserDataUseName = async (name) => {
+  if (name && name !== '') {
+    const user = await User.findOne({ attributes: ['id', 'name', 'rank', 'count'], where: { name }});
+
     if (user) {
-      return true;
+      return user;
     }
   }
 
   return false;
 };
 
-const getUserData = async (key) => {
-  if (key && key !== '') {
-    const user = await User.findOne({ where: { key }});
-    
-    if (user) {
-      return true;
-    }
-  }
 
-  return false;
-}
-
-
-module.exports = { userKeyToIdConv, getUserCheck, getUserData, };
+module.exports = { getUserCheck, getUserData, getUserDataUseName };

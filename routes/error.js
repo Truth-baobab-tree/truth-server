@@ -8,6 +8,5 @@ router.get('/server/:msg', (req, res) => {
 });
 
 
-
 module.exports = router;
 
