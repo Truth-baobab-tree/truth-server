@@ -41,14 +41,14 @@ router.post('/get/eval', async (req, res) => {
 
     const data = [];
 
-    pages.forEach(item => {0
-      let { status, reason, user, createdAt } = item;
+    pages.forEach(item => {
+      let { status, reason, user, rank, created_at } = item;
       let { name, rank } = user;
 
       if (item.user.key === key) {
-        data.unshift({ status, reason, name, createdAt, rank });
+        data.unshift({ status, reason, name, rank, created_at });
       } else {
-        data.push({ status, reason, name, createdAt, rank });
+        data.push({ status, reason, name, rank, created_at });
       }
     });
 
