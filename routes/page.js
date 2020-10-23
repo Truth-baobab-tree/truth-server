@@ -75,16 +75,19 @@ router.post('/new/eval',  async (req, res) => {
 
     const page = await getPageCheck(url, id);
 
+    let date = new Date();
+    const createdAt = `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
+
     if (page) {
       await Page
-        .update({ url, status, reason, }, { where: { url, person: id }})
+        .update({ url, status, reason, createdAt, }, { where: { url, person: id }})
         .then(result => {
           res.status(201).json(result ? 'success' : 'fail');
         });
       } else {
         await User.update({ count: user.count + 1 }, { where: { id }});
         await Page
-          .create({ url, status, person: id, reason })
+          .create({ url, status, person: id, reason, createdAt, })
           .then(result => {
             res.status(201).json(result ? 'success' : 'fail');
           });
