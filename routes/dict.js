@@ -53,7 +53,7 @@ router.post('/api/new/dict', async (req, res) => {
 
 router.post('/api/new/enroll', async (req, res) => {
   try {
-    const { key, title, reason } = req.body;
+    const { key, title, newTitle, reason } = req.body;
     const user = await getUserData(key);
     const person = user.id;
 
@@ -62,10 +62,10 @@ router.post('/api/new/enroll', async (req, res) => {
     if (user) {
       if (dict) {
         await Dict
-          .update({ reason }, { where: { title, person }})
+          .update({ reason, title: newTitle }, { where: { title, person }})
           .then(result => {
             res.status(201).json(result ? 'success' : 'fail');
-          })
+          });
       } else {
         await Dict
           .create({ title, reason, person })

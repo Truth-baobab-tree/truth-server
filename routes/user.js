@@ -7,7 +7,7 @@ const { User } = require('../models');
 router.post('/api/find', async (req, res) => {
   try {
     const { key } = req.body;
-    const data = await User.findOne({attributes: ["name", "eval_count", "rank"], where: { key }});
+    const data = await User.findOne({ attributes: ["name", "count", "rank"], where: { key }});
 
     if (data) return res.status(200).json(data);
 
