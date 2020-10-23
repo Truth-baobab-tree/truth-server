@@ -6,9 +6,9 @@ const { getUserCheck } = require('../script/user');
 const { getPageCheck } = require('../script/page');
 
 
-router.post('/get/score', async (req, res) => {
+router.get('/get/score/:url', async (req, res) => {
   try {
-    const { url } = req.body;
+    const url = decodeURIComponent(req.params.url);
     if (!url) return res.redirect('/error/server/request-error');
 
     const pages = await Page.findAll({ attributes: ['status'], where: { url }});
@@ -31,7 +31,7 @@ router.post('/get/score', async (req, res) => {
 
 router.post('/get/eval', async (req, res) => {
   try {
-    const { url, key } = req.body;
+    const { key } = req.body, url = decodeURIComponent(req.body.url);
 
     const user = await getUserCheck(key);
     if (!user) return res.redirect('/error/server/request-error');
