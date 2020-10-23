@@ -36,19 +36,20 @@ router.post('/get/eval', async (req, res) => {
     const user = await getUserCheck(key);
     if (!user) return res.redirect('/error/server/request-error');
 
-    const pages = await Page.findAll({ where: { url }, include: { model: User }});
+    const pages = await Page.findAll({ attributes: ['status', 'reason', 'createdAt'], where: { url }, include: { attributes: ['name', 'rank'], model: User }});
     if (!pages) return res.status(200).json({});
 
     const data = [];
 
     pages.forEach(item => {
-      let { status, reason, user, created_at } = item;
+      let { status, reason, user, createdAt } = item;
       let { name, rank } = user;
+      console.log(rank, createdAt);
 
       if (item.user.key === key) {
-        data.unshift({ status, reason, name, rank, created_at });
+        data.unshift({ status, reason, name, rank, createdAt });
       } else {
-        data.push({ status, reason, name, rank, created_at });
+        data.push({ status, reason, name, rank, createdAt });
       }
     });
 
