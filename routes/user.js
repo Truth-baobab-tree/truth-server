@@ -20,14 +20,18 @@ router.post('/api/find', async (req, res) => {
 router.post('/api/signup', async (req, res) => {
   try {
     const { name } = req.body;
+    const user = await User.findOne({ where: { name } });
+    if (!user) {
+      const sign = Math.floor(Math.random * 100) + 1;
+      const key = await bcrypt.hash(name + req.body.password + sign, salt);
+      const password = await bcrypt.hash(req.body.password, salt);
 
-    const sign = Math.floor(Math.random * 100) + 1;
-    const key = await bcrypt.hash(name + req.body.password + sign, salt);
-    const password = await bcrypt.hash(req.body.password, salt);
-
-    if (password) {
-      const data = await User.create({ key, sign, name, password });
-      return res.status(200).json(data.key);
+      if (password) {
+        const data = await User.create({ key, sign, name, password });
+        return res.status(200).json(data.key);
+      }
+    } else {
+      return res.status(200).json('user is definition.');
     }
     res.redirect('/error/server/server-error');
   } catch (err) {

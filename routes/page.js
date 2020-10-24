@@ -60,7 +60,7 @@ router.post('/get/eval', async (req, res) => {
   }
 });
 
-router.post('/new/eval',  async (req, res) => {
+router.post('/new/eval', async (req, res) => {
   try {
     const { url, status, reason, key } = req.body;
     if (!key) return res.redirect('/error/server/request-error');
