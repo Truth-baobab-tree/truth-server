@@ -3,19 +3,19 @@ const helmet = require('helmet');
 const hpp = require('hpp');
 const cors = require('cors');
 const morgan = require('morgan');
+const dotenv = require('dotenv');
 
 const pageRouter = require('./routes/page');
 const userRouter = require('./routes/user');
 const infoRouter = require('./routes/info');
-const dictRouter = require('./routes/dict');
-const errorRouter = require('./routes/error');
 
 const { sequelize } = require('./models');
+
+dotenv.config();
 
 const app = express();
 const prod = process.env.NODE_ENV === 'production';
 
-if (!prod) require('dotenv').config();
 
 app.set('port', prod ? process.env.PORT : 5050);
 
@@ -31,8 +31,6 @@ if (prod) {
     origin: true,
     credentials: true,
   }));
-} else {
-  app.use(cors());
 }
 
 app.use(morgan(prod ? 'combined' : 'dev'));
@@ -42,8 +40,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/page', pageRouter);
 app.use('/user', userRouter);
 app.use('/info', infoRouter);
-app.use('/dict', dictRouter);
-app.use('/error', errorRouter);
+
+app.use('*', (err, req, res, next) => {
+  console.log(prod ? 'error' : err);
+  res.status(500).json('error');
+});
 
 app.get('/', (req, res) => {
   res.status(200).json('Hello, Truth Server.');

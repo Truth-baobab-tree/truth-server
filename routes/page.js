@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const { User, Page } = require('../models');
+const { User, Page, sequelize } = require('../models');
 const { getUserCheck } = require('../script/user');
 const { getPageCheck } = require('../script/page');
 
 
-router.post('/get/score', async (req, res) => {
+router.post('/get/score', async (req, res, next) => {
   try {
     const { url } = req.body;
     if (!url) return res.redirect('/error/server/request-error');
@@ -21,22 +21,32 @@ router.post('/get/score', async (req, res) => {
       data[page.status] = data[page.status] + 1;
     });
     data['notice'] = data['lie'] > 100;
-    console.log(data);
+
     res.status(200).json(data);
   } catch (err) {
-    console.log(err);
-    res.redirect('/error/server/server-error');
+    next(err);
   }
 });
 
-router.post('/get/eval', async (req, res) => {
+router.post('/get/eval/:mode', async (req, res, next) => {
   try {
+    const { mode } = req.params;
     const { url, key } = req.body;
 
     const user = await getUserCheck(key);
-    if (!user) return res.redirect('/error/server/request-error');
+    if (!user || (mode !== 'rank' && mode !== 'latest')) return res.redirect('/error/server/request-error');
 
-    const pages = await Page.findAll({ attributes: ['status', 'reason', 'createdAt'], where: { url }, include: { attributes: ['name', 'rank', 'key'], model: User }});
+    const pages = await Page
+      .findAll({
+        attributes: ['status', 'reason', 'createdAt'],
+        where: { url },
+        include: [{
+          attributes: ['name', 'rank', 'key'],
+          model: User,
+        }],
+        order: sequelize.literal(mode === 'rank' ? 'User.rank' : 'id DESC')
+      });
+
     if (!pages) return res.status(200).json({});
 
     const data = [];
@@ -46,24 +56,21 @@ router.post('/get/eval', async (req, res) => {
     pages.forEach(item => {
       let { status, reason, user, createdAt } = item;
       let { name, rank, key } = user;
-      console.log(rank, createdAt);
 
       if (Key === key) {
         data.unshift({ status, reason, name, rank, createdAt });
       } else {
         data.push({ status, reason, name, rank, createdAt });
       }
-      console.log(data);
     });
 
     res.status(200).json(data);
   } catch (err) {
-    console.log(err);
-    res.redirect('/error/server/server-error');
+    next(err);
   }
 });
 
-router.post('/new/eval', async (req, res) => {
+router.post('/new/eval', async (req, res, next) => {
   try {
     const { url, status, reason, key } = req.body;
     if (!key) return res.redirect('/error/server/request-error');
@@ -88,17 +95,16 @@ router.post('/new/eval', async (req, res) => {
         .then(result => {
           res.status(201).json(result ? 'success' : 'fail');
         });
-      } else {
-        await User.update({ count: user.count + 1 }, { where: { id }});
-        await Page
-          .create({ url, status, person: id, reason, createdAt, })
-          .then(result => {
-            res.status(201).json(result ? 'success' : 'fail');
-          });
-      }
+    } else {
+      await User.update({ count: user.count + 1 }, { where: { id }});
+      await Page
+        .create({ url, status, person: id, reason, createdAt, })
+        .then(result => {
+          res.status(201).json(result ? 'success' : 'fail');
+        });
+    }
   } catch (err) {
-    console.log(err);
-    res.redirect('/error/server/server-error');
+    next(err);
   }
 });
 

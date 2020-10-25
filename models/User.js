@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('user', {
     key: {
-      type: DataTypes.STRING(500),
+      type: DataTypes.STRING(600),
       allowNull: false,
       unique: true,
     },
@@ -15,13 +15,13 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
     },
     password: {
-      type: DataTypes.STRING(400),
+      type: DataTypes.STRING(300),
       allowNull: false,
     },
     rank: {
-      type: DataTypes.STRING(10),
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 'bronze',
+      defaultValue: 0,
     },
     count: {
       type: DataTypes.INTEGER,
@@ -33,9 +33,8 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
   });
 
-  User.associate = function(db) {
+  User.associate = (db) => {
     db.User.hasMany(db.Page, { foreignKey: 'person', sourceKey: 'id' });
-    db.User.hasMany(db.Dict, { foreignKey: 'person', sourceKey: 'id' });
   };
 
   return User;

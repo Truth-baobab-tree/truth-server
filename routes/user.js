@@ -4,7 +4,7 @@ const bcrypt  = require('bcrypt'), salt = 10;
 
 const { User } = require('../models');
 
-router.post('/api/find', async (req, res) => {
+router.post('/api/find', async (req, res, next) => {
   try {
     const { key } = req.body;
     const data = await User.findOne({ attributes: ["name", "count", "rank"], where: { key }});
@@ -13,11 +13,11 @@ router.post('/api/find', async (req, res) => {
 
     res.redirect('/error/server/request-error');
   } catch (err) {
-    res.redirect(`/error/server/${err}`);
+    next(err);
   }
 });
 
-router.post('/api/signup', async (req, res) => {
+router.post('/api/signup', async (req, res, next) => {
   try {
     const { name } = req.body;
     const user = await User.findOne({ where: { name } });
@@ -35,11 +35,11 @@ router.post('/api/signup', async (req, res) => {
     }
     res.redirect('/error/server/server-error');
   } catch (err) {
-    res.redirect(`/error/server/${err}`);
+    next(err);
   }
 });
 
-router.post('/api/login', async (req, res) => {
+router.post('/api/login', async (req, res, next) => {
   try {
     const { name } = req.body;
 
@@ -54,7 +54,7 @@ router.post('/api/login', async (req, res) => {
 
     res.status(200).json("login fail.");
   } catch (err) {
-    res.redirect(`/error/${err}`);
+    next(err);
   }
 });
 

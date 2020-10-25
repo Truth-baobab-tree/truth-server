@@ -3,7 +3,7 @@ const router = express.Router();
 const request = require('request');
 
 
-router.get('/get/news/sample/:query/:display', (req, res) => {
+router.get('/get/news/sample/:query/:display', (req, res, next) => {
   try {
     const { query, display } = req.params;
     if (!query || !display) return res.redirect('/error/request-error');
@@ -45,7 +45,7 @@ router.get('/get/news/sample/:query/:display', (req, res) => {
       }
     });
   } catch (err) {
-    res.redirect('/error/server-error');
+    next(err);
   }
 });
 
