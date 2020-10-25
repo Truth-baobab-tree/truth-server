@@ -4,6 +4,7 @@ const bcrypt  = require('bcrypt'), salt = 10;
 
 const { User } = require('../models');
 
+
 router.post('/api/find', async (req, res, next) => {
   try {
     const { key } = req.body;
@@ -11,7 +12,7 @@ router.post('/api/find', async (req, res, next) => {
 
     if (data) return res.status(200).json(data);
 
-    res.redirect('/error/server/request-error');
+    res.status(200).json('not found.');
   } catch (err) {
     next(err);
   }
@@ -30,10 +31,8 @@ router.post('/api/signup', async (req, res, next) => {
         const data = await User.create({ key, sign, name, password });
         return res.status(200).json(data.key);
       }
-    } else {
-      return res.status(200).json('user is definition.');
     }
-    res.redirect('/error/server/server-error');
+    res.status(200).json('user is definition.');
   } catch (err) {
     next(err);
   }

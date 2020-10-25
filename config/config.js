@@ -1,9 +1,6 @@
-let env;
+require('dotenv').config;
 
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-  env = process.env;
-}
+const env = process.env;
 
 const development = {
   "username": env.DB_USERNAME,

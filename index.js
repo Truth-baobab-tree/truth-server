@@ -42,7 +42,7 @@ app.use('/user', userRouter);
 app.use('/info', infoRouter);
 
 app.use('*', (err, req, res, next) => {
-  console.log(prod ? 'error' : err);
+  console.log(err);
   res.status(500).json('error');
 });
 

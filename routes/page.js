@@ -9,7 +9,7 @@ const { getPageCheck } = require('../script/page');
 router.post('/get/score', async (req, res, next) => {
   try {
     const { url } = req.body;
-    if (!url) return res.redirect('/error/server/request-error');
+    if (!url) return res.status(200).json('data is undefined.');
 
     const pages = await Page.findAll({ attributes: ['status'], where: { url }});
     if (!pages) return res.status(200).json({});
@@ -34,7 +34,7 @@ router.post('/get/eval/:mode', async (req, res, next) => {
     const { url, key } = req.body;
 
     const user = await getUserCheck(key);
-    if (!user || (mode !== 'rank' && mode !== 'latest')) return res.redirect('/error/server/request-error');
+    if (!user || (mode !== 'rank' && mode !== 'latest')) return res.status(200).json('data is undefined.');
 
     const pages = await Page
       .findAll({
@@ -73,15 +73,15 @@ router.post('/get/eval/:mode', async (req, res, next) => {
 router.post('/new/eval', async (req, res, next) => {
   try {
     const { url, status, reason, key } = req.body;
-    if (!key) return res.redirect('/error/server/request-error');
+    if (!key) return res.status(200).json('data is undefined.');
     
     const user = await User.findOne({ attributes: ["id", "count"], where: { key }});
-    if (!user) return res.redirect('/error/server/request-error');
+    if (!user) return res.status(200).json('data is undefined.');
 
     const id = user.id;
 
     if (!id || !url || !status || !reason) {
-      return res.redirect('/error/server/request-error');
+      return res.status(200).json('data is undefined.');
     }
 
     const page = await getPageCheck(url, id);
