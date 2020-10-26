@@ -1,4 +1,4 @@
-require('dotenv').config;
+require('dotenv').config();
 
 const env = process.env;
 
@@ -13,7 +13,7 @@ const development = {
 const test = {
   "username": env.DB_USERNAME,
   "password": env.DB_PASSWORD,
-  "database": env.DB_TEST_PROD,
+  "database": env.DB_TEST,
   "host": env.DB_HOST,
   "dialect": "mysql"
 };
@@ -21,7 +21,7 @@ const test = {
 const production = {
   "username": env.DB_USERNAME,
   "password": env.DB_PASSWORD,
-  "database": env.DB_DEV_PROD,
+  "database": env.DB_PROD,
   "host": env.DB_HOST,
   "dialect": "mysql"
 };
