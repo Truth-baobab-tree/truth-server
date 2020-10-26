@@ -44,7 +44,7 @@ router.post('/get/eval/:mode', async (req, res, next) => {
           attributes: ['name', 'rank', 'key'],
           model: User,
         }],
-        order: sequelize.literal(mode === 'rank' ? 'User.rank' : 'id DESC')
+        order: sequelize.literal(`${mode === 'rank' ? 'user.rank,' : ''} id DESC`),
       });
 
     if (!pages) return res.status(200).json({});
