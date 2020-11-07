@@ -90,11 +90,7 @@ router.post('/new/eval', async (req, res, next) => {
     const createdAt = `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
 
     if (page) {
-      await Page
-        .update({ url, status, reason, createdAt, }, { where: { url, person: id }})
-        .then(result => {
-          res.status(201).json(result ? 'success' : 'fail');
-        });
+      res.status(200).json('defined');
     } else {
       await User.update({ count: user.count + 1 }, { where: { id }});
       await Page
