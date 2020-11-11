@@ -1,11 +1,38 @@
-TRUTH_PROJECT_SERVER
+TRUTH_SERVER
 =============
+![issue badge](https://img.shields.io/github/issues/Truth-baobab-tree/TruthServer)
 
 Truth project's extension server.
+
+### Set environment variables
++ DEV_DB_USERNAME
++ DEV_DB_PASSWORD
++ DEV_DB_NAME
++ DEV_DB_HOST
+
++ TEST_DB_USERNAME
++ TEST_DB_PASSWORD
++ TEST_DB_NAME
++ TEST_DB_HOST
+
++ PROD_DB_USERNAME
++ PROD_DB_PASSWORD
++ PROD_DB_NAME
++ PROD_DB_HOST
+
++ NODE_ENV
+
++ API_CLIENT_ID
++ API_CLIENT_SECRET
 
 ### Project setup
 ```sh
 $ npm install
+```
+
+### Database setup
+```sh
+$ npm run db:set
 ```
 
 ### Development
@@ -19,4 +46,4 @@ $ npm run start
 ```
 
 ### You can check it on the web.
-Not deployed.
+https://truthserver.khjcode.repl.co
