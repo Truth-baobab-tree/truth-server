@@ -20,10 +20,11 @@ Truth project's extension server.
 + PROD_DB_NAME
 + PROD_DB_HOST
 
-+ NODE_ENV
-
 + API_CLIENT_ID
 + API_CLIENT_SECRET
+
++ NODE_ENV
++ PORT
 
 ### Project setup
 ```sh
