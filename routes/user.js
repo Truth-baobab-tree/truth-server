@@ -31,29 +31,33 @@ router.post('/api/find', async (req, res, next) => {
 router.post('/api/signup', async (req, res, next) => {
   try {
     const {
-      name
+      name,
+      password
     } = req.body;
-    const user = await User.findOne({
-      where: {
-        name
+    if (5 <= name  && name <= 15 && 10 <= password && password <= 100 ) {
+      const user = await User.findOne({
+        where: {
+          name
+        }
+      });
+      if (!user) {
+        const sign = Math.floor(Math.random * 100) + 1;
+        const key = await bcrypt.hash(name + req.body.password + sign, salt);
+        const password = await bcrypt.hash(req.body.password, salt);
+  
+        if (password) {
+          const data = await User.create({
+            key,
+            sign,
+            name,
+            password
+          });
+          return res.status(200).json(data.key);
+        }
       }
-    });
-    if (!user) {
-      const sign = Math.floor(Math.random * 100) + 1;
-      const key = await bcrypt.hash(name + req.body.password + sign, salt);
-      const password = await bcrypt.hash(req.body.password, salt);
-
-      if (password) {
-        const data = await User.create({
-          key,
-          sign,
-          name,
-          password
-        });
-        return res.status(200).json(data.key);
-      }
+      return res.status(200).json('user is definition.');
     }
-    res.status(200).json('user is definition.');
+    res.status(200).json('data length is excess.');
   } catch (err) {
     next(err);
   }

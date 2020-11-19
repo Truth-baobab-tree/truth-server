@@ -146,6 +146,7 @@ router.post('/new/eval', async (req, res, next) => {
       reason,
       key
     } = req.body;
+
     if (!key) return res.status(200).json('data is undefined.');
 
     const user = await User.findOne({
