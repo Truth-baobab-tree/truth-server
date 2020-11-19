@@ -28,7 +28,10 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Page.associate = (db) => {
-    db.Page.belongsTo(db.User, { foreignKey: 'person', targetKey: 'id' });
+    db.Page.belongsTo(db.User, {
+      foreignKey: 'person',
+      targetKey: 'id'
+    });
   };
 
   return Page;

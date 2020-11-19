@@ -9,7 +9,9 @@ const pageRouter = require('./routes/page');
 const userRouter = require('./routes/user');
 const infoRouter = require('./routes/info');
 
-const { sequelize } = require('./models');
+const {
+  sequelize
+} = require('./models');
 
 dotenv.config();
 
@@ -20,7 +22,9 @@ const prod = process.env.NODE_ENV === 'production';
 app.set('port', prod ? process.env.PORT : 5050);
 
 sequelize
-  .sync({ force: false })
+  .sync({
+    force: false
+  })
   .then(() => console.log('DB connected!'))
   .catch(err => console.error(err));
 
@@ -34,7 +38,9 @@ if (prod) {
 
 app.use(morgan(prod ? 'combined' : 'dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 
 app.use('/page', pageRouter);
 app.use('/user', userRouter);

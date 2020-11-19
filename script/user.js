@@ -1,15 +1,22 @@
-const { User } = require('../models');
+const {
+  User
+} = require('../models');
 
 const getUserCheck = async (key) => {
   try {
     if (key && key !== '') {
-      const user = await User.findOne({ attributes: ['id'], where: { key }});
-      
+      const user = await User.findOne({
+        attributes: ['id'],
+        where: {
+          key
+        }
+      });
+
       if (user) {
         return true;
       }
     }
-  
+
     return false;
   } catch (err) {
     return false;
@@ -19,13 +26,18 @@ const getUserCheck = async (key) => {
 const getUserData = async (key) => {
   try {
     if (key && key !== '') {
-      const user = await User.findOne({ attributes: ['id', 'name', 'rank', 'count'], where: { key }});
-      
+      const user = await User.findOne({
+        attributes: ['id', 'name', 'rank', 'count'],
+        where: {
+          key
+        }
+      });
+
       if (user) {
         return user;
       }
     }
-  
+
     return false;
   } catch (err) {
     return false;
@@ -34,7 +46,12 @@ const getUserData = async (key) => {
 
 const getUserDataUseName = async (name) => {
   if (name && name !== '') {
-    const user = await User.findOne({ attributes: ['id', 'name', 'rank', 'count'], where: { name }});
+    const user = await User.findOne({
+      attributes: ['id', 'name', 'rank', 'count'],
+      where: {
+        name
+      }
+    });
 
     if (user) {
       return user;
@@ -45,4 +62,8 @@ const getUserDataUseName = async (name) => {
 };
 
 
-module.exports = { getUserCheck, getUserData, getUserDataUseName };
+module.exports = {
+  getUserCheck,
+  getUserData,
+  getUserDataUseName
+};

@@ -34,7 +34,10 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.associate = (db) => {
-    db.User.hasMany(db.Page, { foreignKey: 'person', sourceKey: 'id' });
+    db.User.hasMany(db.Page, {
+      foreignKey: 'person',
+      sourceKey: 'id'
+    });
   };
 
   return User;
