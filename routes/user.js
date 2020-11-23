@@ -34,7 +34,7 @@ router.post('/api/signup', async (req, res, next) => {
       name,
       password
     } = req.body;
-    if (5 <= name  && name <= 15 && 10 <= password && password <= 100 ) {
+    if (5 <= name && name <= 20 && 10 <= password && password <= 100 ) {
       const user = await User.findOne({
         where: {
           name
