@@ -69,9 +69,7 @@ router.get('/get/factcheck/:query', async (req, res, next) => {
     }, (err, response, body) => {
       let data = body.replace(/&quot;/g, '').substring(body.indexOf('<div class="fcItem_wrap">'), body.indexOf('<a class="last "'));
       data = data.substring(data.indexOf('<li class="fcItem_wrap_li">'), data.indexOf('<a class="btn_detail') + 20);
-      console.log(data);
       data = data.substring(data.indexOf('<a href="/v2/facts'), data.indexOf('</a>'));
-      console.log(data)
       const content = {
         title: data.substring(data.indexOf('">') + 2, 100),
         link: `${url}/${data.substring(data.indexOf('href="')+7, data.indexOf('">'))}`,
