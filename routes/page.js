@@ -1,18 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const {
-  User,
-  Page,
-  sequelize
-} = require('../models');
-const {
-  getUserCheck,
-  getUserData
-} = require('../script/user');
-const {
-  getPageCheck
-} = require('../script/page');
+const { User, Page, sequelize } = require('../models');
+const { getUserCheck, getUserData } = require('../controller/user');
+const { getPageCheck } = require('../controller/page');
 
 
 router.post('/get/status', async (req, res) => {

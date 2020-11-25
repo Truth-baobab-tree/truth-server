@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt'),
-  salt = 10;
+const bcrypt = require('bcrypt'), salt = 10;
 
-const {
-  User
-} = require('../models');
+const { User } = require('../models');
 
 
 router.post('/api/find', async (req, res, next) => {
